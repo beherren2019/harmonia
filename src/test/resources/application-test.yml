@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    # Basic clean H2 in-memory URL configuration
+    url: jdbc:h2:mem:harmonia_test_db;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      # Automatically builds in-memory database structures out of your Java Entity models
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+  flyway:
+    # CRITICAL: Prevents PostgreSQL scripts from running against H2 and crashing startup
+    enabled: false

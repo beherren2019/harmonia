@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: postgres_db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: harmonia
+      POSTGRES_PASSWORD: harmonia
+      POSTGRES_DB: postgres
+    volumes:
+      - harmonia_db_volume:/var/lib/postgresql/data
+
+volumes:
+  harmonia_db_volume:
