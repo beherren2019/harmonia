@@ -1,16 +1,38 @@
 services:
-  db:
+  postgres-db:
     image: postgres:16-alpine
-    container_name: postgres_db
+    container_name: harmonia-postgres
     restart: always
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: harmonia
       POSTGRES_PASSWORD: harmonia
-      POSTGRES_DB: postgres
+      POSTGRES_DB: harmonia_db
     volumes:
       - harmonia_db_volume:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U harmonia -d harmonia_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: harmonia-app
+    ports:
+      - "8090:8090"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/harmonia_db
+      - SPRING_DATASOURCE_USERNAME=harmonia
+      - SPRING_DATASOURCE_PASSWORD=harmonia
+      - SPRING_SECURITY_USER_NAME=user
+      - SPRING_SECURITY_USER_PASSWORD=harmonia
+    depends_on:
+      postgres-db:
+        condition: service_healthy
 
 volumes:
   harmonia_db_volume:

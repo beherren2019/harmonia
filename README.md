@@ -1,9 +1,11 @@
 # Harmonia - Music Metadata Service
 
-"Harmonia" ancient Greek goddess of harmony. It it named because of maintenance of music tracks.
- This service "harmonia" is a secure, microservice designed with **Java 21** and **Spring Boot 3.4.x** 
- to handle catalog infrastructure streams, multi-artist track tracking credits, and a fair cyclical "Artist of the Day"
- homepage rotation mechanism.
+"Harmonia" ancient Greek goddess of harmony. It is named not because of it.
+ 
+This service "harmonia" is a secure, microservice designed with **Java 21** and **Spring Boot 3.4.x** 
+to handle catalog infrastructure streams, multi-artist track tracking credits, and a fair cyclical "Artist of the Day"
+homepage rotation mechanism.
+---
 
 ## Prerequisites
 
@@ -11,6 +13,20 @@ Ensure you have the following tools installed locally:
 - **Java 21 LTS** (Eclipse Temurin recommended)
 - **Apache Maven 3.9+**
 - **Docker & Docker Compose**
+
+---
+
+## Assumptions
+One track can be owned by multiple artists, which means the object relation is "many to many" between Artist and Track entities.
+
+Please refer, table creation script V001__Initial_ddl.sql, which contains initial ddls. also,
+test-data.sql for insertion data into those tables.
+
+## Further actions
+Note: Audit tables are presented only in the V001__Initial_ddl.sql, for further extensions and current implementation
+is not depended with spring data envers. 
+
+---
 
 ## Local Compilation & Testing
 

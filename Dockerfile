@@ -1,13 +1,22 @@
-FROM eclipse-temurin:21-jre-jammy
+# --- Stage 1: Build the application ---
+FROM maven:3.9.6-eclipse-temurin-21-alpine AS builder
+WORKDIR /app
+COPY pom.xml .
+# Cache dependencies before copying source code
+RUN mvn dependency:go-offline -B
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Refer to Maven build -> finalName
-ARG JAR_FILE=target/harmonia-0.0.1-SNAPSHOT.jar
+# --- Stage 2: Runtime image ---
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
 
-# cd /opt/app
-WORKDIR /opt/app
+# Run as non-root user for security compliance
+RUN addgroup -S harmoniagroup && adduser -S harmoniauser -G harmoniagroup
+USER harmoniauser
 
-# cp target/spring-boot-web.jar /opt/app/app.jar
-COPY ${JAR_FILE} app.jar
+COPY --from=builder /app/target/*.jar app.jar
 
-# java -jar /opt/app/app.jar
-ENTRYPOINT ["java","-jar","app.jar"]
+EXPOSE 8090
+
+ENTRYPOINT ["java", "-jar", "app.jar"]

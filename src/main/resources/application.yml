@@ -7,9 +7,9 @@ spring:
   devtools:
     add-properties: false
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: harmonia
-    password: harmonia
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/harmonia_db}
+    username: ${SPRING_DATASOURCE_USERNAME:harmonia}
+    password: ${SPRING_DATASOURCE_PASSWORD:harmonia}
     driver-class-name: org.postgresql.Driver
 
   jpa:
