@@ -1,0 +1,14 @@
+-- 1. Drop the lookup manifest table first (handles foreign keys smoothly)
+DROP TABLE IF EXISTS track_artist_manifest_audit CASCADE;
+DROP TABLE IF EXISTS track_artist_manifest CASCADE;
+
+-- 2. Drop dependent tables and audits
+DROP TABLE IF EXISTS artist_aliases_audit CASCADE;
+DROP TABLE IF EXISTS artist_aliases CASCADE;
+DROP TABLE IF EXISTS tracks_audit CASCADE;
+DROP TABLE IF EXISTS tracks CASCADE;
+DROP TABLE IF EXISTS artists_audit CASCADE;
+DROP TABLE IF EXISTS artists CASCADE;
+
+-- 3. Drop your custom ENUM type
+DROP TYPE IF EXISTS audit_action_type CASCADE;

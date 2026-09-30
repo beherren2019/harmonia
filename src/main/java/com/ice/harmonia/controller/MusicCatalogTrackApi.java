@@ -43,7 +43,7 @@ public interface MusicCatalogTrackApi {
             @PathVariable @NotNull Long aliasId,
             @RequestBody @Valid AliasModificationRequest aliasModificationRequest);
 
-    @Operation(summary = "Get Tracks by User")
+    @Operation(summary = "Get Tracks by Artist")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Tracks retrieved successfully"),
             @ApiResponse(responseCode = "404", description = "User not found"),
@@ -53,7 +53,19 @@ public interface MusicCatalogTrackApi {
     })
     Page<TrackDto> getTracksByArtist(
             @PathVariable @NotNull Long artistId,
-            @RequestParam(required = false, defaultValue = "true") boolean isAlias,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size);
+
+    @Operation(summary = "Get Tracks by Alias")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tracks retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error"),
+            @ApiResponse(responseCode = "400", description = "Bad Request"),
+            @ApiResponse(responseCode = "409", description = "There is a conflict to get Tracks")
+    })
+    Page<TrackDto> getTracksByArtistAlias(
+            @PathVariable @NotNull Long aliasId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size);
 

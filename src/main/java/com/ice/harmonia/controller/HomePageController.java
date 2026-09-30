@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,13 +26,26 @@ public class HomePageController implements HomePageApi {
 
     @Override
     @GetMapping(
-            value = "/homepage/artist-of-the-day",
+            value = "/homepage/artist/artist-of-the-day",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<FeaturedArtistResponse> getArtistOfTheDay(
-            @RequestParam(required = false, defaultValue = "true") boolean isAlias) {
+    public ResponseEntity<FeaturedArtistResponse> getArtistOfTheDay() {
 
-        FeaturedArtistResponse response = homePageService.getArtistOfTheDay(isAlias);
+        FeaturedArtistResponse response = homePageService.getArtistOfTheDay();
+
+        logger.info("Artist of the Day: {}", response.artistId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Override
+    @GetMapping(
+            value = "/homepage/alias/artist-of-the-day",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<FeaturedArtistResponse> getArtistAliasOfTheDay() {
+
+        FeaturedArtistResponse response = homePageService.getAliasArtistOfTheDay();
 
         logger.info("Artist of the Day: {}", response.artistId());
 

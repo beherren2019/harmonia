@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -27,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     @DisplayName("POST /api/v1/music-catalog/tracks - Success with an existing artist")
     void shouldCreateTrackSuccessfully_whenArtist_alreadyExists() throws Exception {
         // Assign
@@ -85,6 +87,7 @@ public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrat
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     @DisplayName("POST /api/v1/music-catalog/tracks - Success with an new artist/alias persona")
     void shouldCreateTrackSuccessfully_whenNewArtistAlias_requiredToCreate() throws Exception {
         // Assign
@@ -143,6 +146,7 @@ public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrat
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     @DisplayName("POST /api/v1/music-catalog/tracks - Success with an existing artist and new alias")
     void shouldCreateTrackSuccessfully_whenExistingArtistAndNewAlias_required() throws Exception {
         // Assign
@@ -201,6 +205,7 @@ public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrat
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     @DisplayName("POST /api/v1/music-catalog/tracks - Failure with an existing track")
     void shouldCreateTrackThrowException_whenTrackTitleAndGenre_alreadyAvailable() throws Exception {
         // Assign
@@ -235,6 +240,7 @@ public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrat
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     @DisplayName("POST /api/v1/music-catalog/tracks - Failure with an existing artist has new name")
     void shouldCreateTrackThrowException_whenExistingArtist_hasNewName() throws Exception {
         // Assign
@@ -269,6 +275,7 @@ public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrat
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     @DisplayName("POST /api/v1/music-catalog/tracks - Failure with an existing artist alias is inactive")
     void shouldCreateTrackThrowException_whenExistingArtistAlias_isNotActive() throws Exception {
         // Assign
@@ -303,6 +310,7 @@ public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrat
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     @DisplayName("POST music-catalog/track/{trackId}/artist/{artistId}/alias/{aliasId} - Success with an existing artist alias")
     void shouldUpdateTrackAliasSuccessfully_whenArtist_alreadyExists() throws Exception {
         // Assign
@@ -357,6 +365,7 @@ public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrat
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     @DisplayName("POST music-catalog/track/{trackId}/artist/{artistId}/alias/{aliasId} - Failure with no track available")
     void shouldUpdateTrackThrowException_whenTrack_isUnavailable() throws Exception {
         // Assign
@@ -386,6 +395,7 @@ public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrat
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     @DisplayName("POST music-catalog/track/{trackId}/artist/{artistId}/alias/{aliasId} - Failure with no artist available")
     void shouldUpdateTrackThrowException_whenArtist_isUnavailable() throws Exception {
         // Assign
@@ -416,6 +426,7 @@ public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrat
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     @DisplayName("POST music-catalog/track/{trackId}/artist/{artistId}/alias/{aliasId} - Failure with no artist alias available")
     void shouldUpdateTrackThrowException_whenArtistAlias_isUnavailable() throws Exception {
         // Assign
@@ -446,6 +457,7 @@ public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrat
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     @DisplayName("POST music-catalog/track/{trackId}/artist/{artistId}/alias/{aliasId} - Failure with no track artist relationship available")
     void shouldUpdateTrackThrowException_whenTrackArtistAliasRelationship_isUnavailable() throws Exception {
         // Assign
@@ -476,6 +488,7 @@ public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrat
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     @DisplayName("POST music-catalog/track/{trackId}/artist/{artistId}/alias/{aliasId} - Failure with no alias in active")
     void shouldUpdateTrackThrowException_whenAlias_isNotActive() throws Exception {
         // Assign
@@ -506,6 +519,7 @@ public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrat
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     @DisplayName("POST music-catalog/track/{trackId}/artist/{artistId}/alias/{aliasId} - Failure with no alias name change")
     void shouldUpdateTrackThrowException_whenAliasName_isUnChanged() throws Exception {
         // Assign
@@ -536,17 +550,15 @@ public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrat
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     @DisplayName("POST music-catalog/artist/{artistId}/tracks - Success with an existing artist")
     void shouldGetTracksSuccessfully_whenArtist_alreadyExists() throws Exception {
         // Assign
         Long artistId = 100L;
 
-        Boolean isAlias = false;
-
         // Act
         String responseString = mockMvc.perform(
                         get("/api/v1/music-catalog/artist/{artistId}/tracks", artistId)
-                                .param("isAlias", String.valueOf(isAlias))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -569,16 +581,15 @@ public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrat
     }
 
     @Test
-    @DisplayName("POST music-catalog/artist/{artistId}/tracks - Success with an existing alias")
+    @WithMockUser(username = "user", roles = {"USER"})
+    @DisplayName("POST music-catalog/alias/{aliasId}/tracks - Success with an existing alias")
     void shouldGetTracksSuccessfully_whenArtistAlias_alreadyExists() throws Exception {
         // Assign
         Long artistId = 10L;
-        Boolean isAlias = true;
 
         // Act
         String responseString = mockMvc.perform(
-                        get("/api/v1/music-catalog/artist/{artistId}/tracks", artistId)
-                                .param("isAlias", String.valueOf(isAlias))
+                        get("/api/v1/music-catalog/alias/{aliasId}/tracks", artistId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -601,16 +612,15 @@ public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrat
     }
 
     @Test
-    @DisplayName("POST music-catalog/artist/{artistId}/tracks - Failure with an alias inactive")
+    @WithMockUser(username = "user", roles = {"USER"})
+    @DisplayName("POST music-catalog/alias/{aliasId}/tracks - Failure with an alias inactive")
     void shouldGetTracksSuccessfully_whenArtistAlias_isInActive() throws Exception {
         // Assign
         Long artistId = 11L;
-        Boolean isAlias = true;
 
         // Act
         MvcResult mvcResult = mockMvc.perform(
-                        get("/api/v1/music-catalog/artist/{artistId}/tracks", artistId)
-                                .param("isAlias", String.valueOf(isAlias))
+                        get("/api/v1/music-catalog/alias/{aliasId}/tracks", artistId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isConflict())
@@ -625,16 +635,15 @@ public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrat
     }
 
     @Test
-    @DisplayName("POST music-catalog/artist/{artistId}/tracks - Failure with an alias unavailable")
+    @WithMockUser(username = "user", roles = {"USER"})
+    @DisplayName("POST music-catalog/alias/{aliasId}/tracks - Failure with an alias unavailable")
     void shouldGetTracksSuccessfully_whenArtistAlias_isNotAvailable() throws Exception {
         // Assign
         Long artistId = -11L;
-        Boolean isAlias = true;
 
         // Act
         MvcResult mvcResult = mockMvc.perform(
-                        get("/api/v1/music-catalog/artist/{artistId}/tracks", artistId)
-                                .param("isAlias", String.valueOf(isAlias))
+                        get("/api/v1/music-catalog/alias/{aliasId}/tracks", artistId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -649,16 +658,15 @@ public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrat
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     @DisplayName("POST music-catalog/artist/{artistId}/tracks - Failure with an artist unavailable")
     void shouldGetTracksSuccessfully_whenArtist_isNotAvailable() throws Exception {
         // Assign
         Long artistId = -11L;
-        Boolean isAlias = false;
 
         // Act
         MvcResult mvcResult = mockMvc.perform(
                         get("/api/v1/music-catalog/artist/{artistId}/tracks", artistId)
-                                .param("isAlias", String.valueOf(isAlias))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -669,6 +677,6 @@ public class MusicCatalogTrackControllerIntegrationTest extends AbstractIntegrat
         ResponseStatusException exception = (ResponseStatusException) mvcResult.getResolvedException();
 
         assertNotNull(exception);
-        assertEquals("NotFound! Artist alias {-11} not found", exception.getReason());
+        assertEquals("NotFound! Artist {-11} not found", exception.getReason());
     }
 }

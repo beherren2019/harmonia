@@ -10,7 +10,7 @@ INSERT INTO artist_aliases (id, external_id, artist_id, alias_name, is_visible_i
 (12, 'c3b9b472-3580-482d-9861-125674c1071d', 101, 'Flash', TRUE, TRUE, CURRENT_TIMESTAMP, 'USER');
 
 -- Seed Initial Tracks
-INSERT INTO tracks(id, external_id, title, genre, duration_seconds, created_at, created_by) VALUES
+INSERT INTO tracks(id, external_id, title, genre, duration_in_seconds, created_at, created_by) VALUES
 (500, 'cef9dd07-3c20-42bb-9cd7-7307c1673f2a', 'Sing in Rain', 'Light Music', 150,CURRENT_TIMESTAMP, 'USER'),
 (501, 'c4395dc3-7064-4383-acf2-c47a253a373f', 'My Life', 'Hard music', 22, CURRENT_TIMESTAMP, 'USER'),
 (502, 'dd929726-6496-4332-9123-40686e5b035e', 'Wonder in World', 'Romance', 100, CURRENT_TIMESTAMP, 'USER');

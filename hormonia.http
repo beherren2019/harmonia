@@ -1,0 +1,83 @@
+### HARMONIA SYSTEM SERVICE REST CLIENT EXECUTION PIPELINE
+# Uses the active target environment configuration profile data blocks
+
+@base_url = http://{{host}}:{{port}}{{contextPath}}
+
+### =========================================================================
+### 1. TRACK CATALOG ARCHITECTURE ENDPOINTS
+### =========================================================================
+
+# @name Add Track & Initialize Artist Context (Seed Request)
+POST {{base_url}}/music-catalog/tracks
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Title0009",
+  "genre": "Genre0009",
+  "durationInSeconds": 344,
+  "trackArtistInfos": [
+    {
+      "artistAliasName": "TestAlias009",
+      "artistExternalId": "2c653629-154b-4ea2-a1ed-aa22578dd43b",
+      "artistLegalName": "TestName009"
+    }
+  ]
+}
+
+> {%
+    var body = response.body;
+    console.log(response.body)
+
+    client.global.set("trackId", body.id);
+
+    var artist = body.artistResponse[0];
+    client.global.set("artistId", artist.id);
+
+    var alias = artist.alias[0];
+    client.global.set("aliasId", alias.id);
+
+    client.log("Successfully cached numeric database IDs: " +
+        "Track ID=" + body.id + ", " +
+        "Artist ID=" + artist.id + ", " +
+        "Alias ID=" + alias.id);
+%}
+
+###
+PATCH {{base_url}}/music-catalog/track/{{trackId}}/artist/{{artistId}}/alias/{{aliasId}}
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "aliasName": "alias999"
+}
+
+> {%
+    console.log(response.body)
+%}
+
+###
+GET {{base_url}}/music-catalog/artist/{{artistId}}/tracks?
+    page={{page}}&
+    size={{size}}
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+Accept: application/json
+
+> {%
+    console.log(response.body)
+%}
+
+###
+GET {{base_url}}/music-catalog/alias/{{aliasId}}/tracks?
+    page={{page}}&
+    size={{size}}
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+Accept: application/json
+
+> {%
+    console.log(response.body)
+%}

@@ -20,5 +20,7 @@ public interface MusicCatalogTrackService {
             @NotNull Long aliasId,
             @Valid AliasModificationRequest aliasModificationRequest);
 
-    Page<TrackDto> getTracksByArtistId(@NotNull Long artistId, boolean isAlias, Pageable pageable);
+    Page<TrackDto> getTracksByArtistId(@NotNull Long artistId, Pageable pageable);
+
+    Page<TrackDto> getTracksByArtistAliasId(@NotNull Long aliasId, Pageable pageable);
 }

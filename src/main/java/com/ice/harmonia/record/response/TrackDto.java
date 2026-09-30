@@ -8,7 +8,6 @@ import java.util.UUID;
 public record TrackDto(
         Long id,
         UUID externalId,
-        String name,
         String title,
         String genre,
         int durationInSeconds

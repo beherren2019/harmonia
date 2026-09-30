@@ -28,7 +28,7 @@ public class Track implements Identifiable {
     @Column(name = "genre", nullable = false)
     private String genre;
 
-    @Column(name = "duration_seconds", nullable = false)
+    @Column(name = "duration_in_seconds", nullable = false)
     private int durationInSeconds;
 
     @Column(name = "created_by", nullable = false, updatable = false)

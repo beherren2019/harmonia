@@ -65,7 +65,7 @@ public class MusicCatalogTrackServiceImpl implements MusicCatalogTrackService {
 
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public TrackResponse createTrack(@NotNull TrackCreationRequest trackCreationRequest) {
 
         validateTrackArtistInfos(trackCreationRequest.trackArtistInfos());
@@ -154,12 +154,14 @@ public class MusicCatalogTrackServiceImpl implements MusicCatalogTrackService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<TrackDto> getTracksByArtistId(Long artistId, boolean isAlias, Pageable pageable) {
-        if (isAlias) {
-            return fetchTracksByAliasId(artistId, pageable);
-        } else {
-            return fetchTracksByArtist(artistId,pageable);
-        }
+    public Page<TrackDto> getTracksByArtistId(Long artistId, Pageable pageable) {
+        return fetchTracksByArtist(artistId,pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<TrackDto> getTracksByArtistAliasId(Long aliasId, Pageable pageable) {
+        return fetchTracksByAliasId(aliasId, pageable);
     }
 
     private Page<TrackDto> fetchTracksByAliasId(Long aliasId, Pageable pageable) {
@@ -187,7 +189,7 @@ public class MusicCatalogTrackServiceImpl implements MusicCatalogTrackService {
         Artist artist = artistRepository
                 .findById(artistId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        format("NotFound! Artist alias {%s} not found", artistId.toString())));
+                        format("NotFound! Artist {%s} not found", artistId.toString())));
 
         Page<TrackArtistManifest> trackArtistManifest = trackArtistManifestRepository
                 .findTrackArtistManifestsByArtist(artist, pageable);

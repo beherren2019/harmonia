@@ -77,7 +77,6 @@ public class MusicCatalogTrackController implements MusicCatalogTrackApi {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Page<TrackDto> getTracksByArtist(
             @PathVariable @NotNull Long artistId,
-            @RequestParam(required = false, defaultValue = "true") boolean isAlias,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
@@ -86,6 +85,22 @@ public class MusicCatalogTrackController implements MusicCatalogTrackApi {
         logger.info("Getting Tracks by Artist: {}", artistId);
 
         return musicCatalogTrackService
-                .getTracksByArtistId(artistId, isAlias, pageable);
+                .getTracksByArtistId(artistId, pageable);
+    }
+
+    @Override
+    @GetMapping(value = "/alias/{aliasId}/tracks",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Page<TrackDto> getTracksByArtistAlias(
+            @PathVariable @NotNull Long aliasId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        logger.info("Getting Tracks by Artist Alias: {}", aliasId);
+
+        return musicCatalogTrackService
+                .getTracksByArtistAliasId(aliasId, pageable);
     }
 }

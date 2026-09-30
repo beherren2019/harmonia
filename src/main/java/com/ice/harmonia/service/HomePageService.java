@@ -4,5 +4,7 @@ import com.ice.harmonia.record.FeaturedArtistResponse;
 
 public interface HomePageService {
 
-    FeaturedArtistResponse getArtistOfTheDay(boolean isAlias);
+    FeaturedArtistResponse getAliasArtistOfTheDay();
+
+    FeaturedArtistResponse getArtistOfTheDay();
 }

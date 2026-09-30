@@ -42,37 +42,40 @@ public class HomePageServiceImpl implements HomePageService {
         this.artistAliasMapper = artistAliasMapper;
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public FeaturedArtistResponse getAliasArtistOfTheDay() {
+        return fetchAliasArtistOfTheDay();
+    }
 
     @Override
     @Transactional(readOnly = true)
-    public FeaturedArtistResponse getArtistOfTheDay(boolean isAlias) {
-        if (isAlias) {
-            return fetchAliasArtistOfTheDay();
-        } else {
-            return fetchArtistOfTheDay();
-        }
+    public FeaturedArtistResponse getArtistOfTheDay() {
+        return fetchArtistOfTheDay();
     }
 
+
     private FeaturedArtistResponse fetchAliasArtistOfTheDay() {
-        long totalArtistAliases = artistAliasRepository.count();
+        long totalArtistAliases = artistAliasRepository.countByIsActiveTrueAndIsVisibleInRotationTrue();
+       // long totalArtistAliases = artistAliasRepository.count();
 
         if (totalArtistAliases == 0) {
             logger.error("No artist aliases available in the catalog.");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No artists available in the catalog.");
         }
 
-        // 1. Calculate how many days have passed since our base date
-        long daysElapsed = ChronoUnit.DAYS.between(EPOCH_BASE, LocalDate.now());
+        int targetIndex = getTargetIndex(totalArtistAliases);
 
-        // 2. Use modulo to get a 0-indexed position (e.g., if 10 artists, returns 0 to 9)
-        int targetIndex = (int) (daysElapsed % totalArtistAliases);
-
-        // 3. Directly fetch the artist at that offset position (Handles ID/index gaps perfectly)
         ArtistAlias artistAlias = artistAliasRepository.findAllByIsActiveTrueAndIsVisibleInRotationTrue(PageRequest.of(targetIndex, 1))
                 .getContent()
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("Catalog sync error while fetching artist."));
+                .orElseGet(() -> artistAliasRepository.findAllByIsActiveTrueAndIsVisibleInRotationTrue(PageRequest.of(0, 1))
+                        .getContent()
+                        .stream()
+                        .findFirst()
+                        .orElseThrow(() -> new EntityNotFoundException("Catalog sync error while fetching artist.")));
+
 
 
         return artistAliasMapper.mapEntityToFeaturedArtistResponse(artistAlias);
@@ -86,13 +89,8 @@ public class HomePageServiceImpl implements HomePageService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No artists available in the catalog.");
         }
 
-        // 1. Calculate how many days have passed since our base date
-        long daysElapsed = ChronoUnit.DAYS.between(EPOCH_BASE, LocalDate.now());
+        int targetIndex = getTargetIndex(totalArtists);
 
-        // 2. Use modulo to get a 0-indexed position (e.g., if 10 artists, returns 0 to 9)
-        int targetIndex = (int) (daysElapsed % totalArtists);
-
-        // 3. Directly fetch the artist at that offset position (Handles ID/index gaps perfectly)
         Artist artist = artistRepository.findAll(PageRequest.of(targetIndex, 1))
                 .getContent()
                 .stream()
@@ -102,4 +100,10 @@ public class HomePageServiceImpl implements HomePageService {
 
         return artistMapper.mapEntityToFeaturedArtistResponse(artist);
     }
+
+    private int getTargetIndex(long totalItems) {
+        long daysElapsed = ChronoUnit.DAYS.between(EPOCH_BASE, LocalDate.now());
+        return (int) (daysElapsed % totalItems);
+    }
+
 }
