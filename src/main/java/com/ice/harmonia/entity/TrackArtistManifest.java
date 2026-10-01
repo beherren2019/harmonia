@@ -16,9 +16,6 @@ public class TrackArtistManifest {
     @EmbeddedId
     private TrackArtistId id;
 
-    @Column(name = "alias_id", nullable = false)
-    private Long aliasId;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("trackId")
     @JoinColumn(name = "track_id")

@@ -119,7 +119,7 @@ public class MusicCatalogTrackServiceImpl implements MusicCatalogTrackService {
                         format("Not found! Artist alias {%s} not found", aliasId.toString())));
 
         TrackArtistManifest existingArtistAliasManifest = trackArtistManifestRepository
-                .findByTrackAndArtistAndAliasId(track, artist, aliasId)
+                .findByTrackAndArtistAndArtistAlias(track, artist, artistAlias)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Not found! Track Artist relation not found"));
 
@@ -180,7 +180,7 @@ public class MusicCatalogTrackServiceImpl implements MusicCatalogTrackService {
         }
 
         Page<TrackArtistManifest> trackArtistManifest = trackArtistManifestRepository
-                .findTrackArtistManifestsByAliasId(aliasId, pageable);
+                .findTrackArtistManifestsByArtistAlias(artistAlias, pageable);
 
         return trackDtoMapper.pageToTrackDtoPage(trackArtistManifest);
     }
@@ -262,7 +262,6 @@ public class MusicCatalogTrackServiceImpl implements MusicCatalogTrackService {
                 .artist(artist)
                 .artistAlias(artistAlias)
                 .aliasNameSnapshot(artistAlias.getAliasName())
-                .aliasId(artistAlias.getId())
                 .build();
 
         return trackArtistManifestRepository.save(trackArtistManifest);
