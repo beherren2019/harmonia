@@ -30,7 +30,7 @@ public class TrackArtistManifest {
     private Artist artist;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "artist_alias_id")
+    @JoinColumn(name = "alias_id")
     private ArtistAlias artistAlias;
 
     @Column(name = "alias_name_snapshot")

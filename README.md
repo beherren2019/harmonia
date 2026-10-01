@@ -1,10 +1,12 @@
+
 # Harmonia - Music Metadata Service
 
-"Harmonia" ancient Greek goddess of harmony. It is named not because of it.
+"Harmonia" ancient Greek goddess of harmony. It is named not because of it and just a metaphore.
+
+This service "harmonia" is a secure, microservice designed with **Java 21** and **Spring Boot 3.4.x**
+to handle catalog infrastructure streams, multi-artist track tracking credits,
+and a fair cyclical "Artist of the Day" homepage rotation mechanism.
  
-This service "harmonia" is a secure, microservice designed with **Java 21** and **Spring Boot 3.4.x** 
-to handle catalog infrastructure streams, multi-artist track tracking credits, and a fair cyclical "Artist of the Day"
-homepage rotation mechanism.
 ---
 
 ## Prerequisites
@@ -17,14 +19,21 @@ Ensure you have the following tools installed locally:
 ---
 
 ## Assumptions
-One track can be owned by multiple artists, which means the object relation is "many to many" between Artist and Track entities.
+- One track can be owned by multiple artists, which means the object relation is "many to many" between Artist and Track entities.
 
-Please refer, table creation script V001__Initial_ddl.sql, which contains initial ddls. also,
-test-data.sql for insertion data into those tables.
+![DB Realtions](/docs/images/03_harmonia_db_relation.png)
+
 
 ## Further actions
-Note: Audit tables are presented only in the V001__Initial_ddl.sql, for further extensions and current implementation
-is not depended with spring data envers. 
+**Note**:
+
+- API **POST /music-catalog/tracks** limited to add on Artist and Alias at a time.
+
+- Please refer, table creation script **V001__Initial_ddl.sql**, which contains initial ddls. also,
+  **test-data.sql** for insertion data into those tables.
+
+- Audit tables are presented only in the **V001__Initial_ddl.sql**, for further extensions
+  and current implementation is **not depended with spring data envers**.
 
 ---
 
@@ -42,9 +51,9 @@ mvn package -DskipTests
 
 ---
 
-## Docker Compose Deployment 
+## Docker Compose Deployment
 
-We can build the multi-stage container setup and boot up the microservice along with a live PostgreSQL instance 
+We can build the multi-stage container setup and boot up the microservice along with a live PostgreSQL instance
 with a single terminal instruction loop:
 
 ```bash
@@ -55,7 +64,8 @@ docker-compose up --build
 docker-compose down -v
 ```
 
-The system will build your target source code and start listing endpoints on port **8090**.
+The system will build your target source code and start listing endpoints on port **8090**. And,
+postgres DB on port **5433**
 
 ## Security Parameters
 
@@ -65,21 +75,25 @@ Every application route requires valid HTTP Basic credentials to authenticate.
 
 ---
 
-## 📊 Interactive API (Swagger UI)
+## Interactive API (Swagger UI)
 
-When the service container grid finishes starting up, open a private incognito browser pane and navigate 
+When the service container grid finishes starting up, open a private incognito browser pane and navigate
 to the interactive OpenApi mapping documentation layout dashboard:
 
- **URL:** `http://localhost:8090/api/v1/swagger-ui/index.html`
+**URL:** `http://localhost:8090/api/v1/swagger-ui/index.html`
 
-*Note: Inside the Swagger window, press the **"Authorize"** button 
- and enter the default username and password credentials to enable testing commands 
- inside the web application context panels.*
+![Swagger UI](/docs/images/01_harmonia_swagger.png)
+
+
+*Note: Inside the Swagger window, press the **"Authorize"** button
+and enter the default username and password credentials to enable testing commands
+inside the web application context panels.*
 
 ---
 
 ## REST API Blueprints
 
-Please refer the harmonia.http, It has the basic api calls to test via Intellij HTTP Client. 
+Please refer the **harmonia.http**, It has the basic api calls to test via Intellij HTTP Client.
 After application start up, we have option to play around it.
-     
+
+![REST API Blueprints](/docs/images/02_harmonia_rest_blueprint.png)

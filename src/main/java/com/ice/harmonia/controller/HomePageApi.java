@@ -19,7 +19,7 @@ public interface HomePageApi {
     })
     ResponseEntity<FeaturedArtistResponse> getArtistOfTheDay();
 
-    @Operation(summary = "Get Artist of the Day")
+    @Operation(summary = "Get Artist of the Day by Alias")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Artist of the Day retrieved successfully"),
             @ApiResponse(responseCode = "400", description = "Bad Request"),
